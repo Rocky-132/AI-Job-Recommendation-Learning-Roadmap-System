@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CareerMatch AI | Smart Job Matcher & Learning Roadmaps</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <!-- Background Elements -->
+    <div class="blob blob-indigo"></div>
+    <div class="blob blob-cyan"></div>
+    <div class="blob blob-purple"></div>
+
+    <div class="app-container">
+        <!-- Header Section -->
+        <header class="app-header glass-card">
+            <div class="brand">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                </div>
+                <div>
+                    <h1>CareerMatch <span class="neon-text">AI</span></h1>
+                    <p class="subtitle">AI-Powered Job Recommendations & Personalised Learning Paths</p>
+                </div>
+            </div>
+            <div class="system-status">
+                <span id="status-dot" class="status-dot dot-offline"></span>
+                <span id="status-text" class="status-text">Backend Offline</span>
+            </div>
+        </header>
+
+        <!-- Main Workspace Dashboard Grid -->
+        <main class="dashboard-grid">
+            
+            <!-- Left Panel: Input & Profile Details -->
+            <section class="control-panel flex-column">
+                
+                <!-- Resume Upload Panel -->
+                <div id="upload-panel" class="glass-card panel-card">
+                    <h2 class="section-title"><i class="fa-solid fa-file-invoice"></i> 1. Upload Resume</h2>
+                    <p class="description-text">Upload your PDF or TXT resume to automatically extract your technical skills and experience metrics.</p>
+                    
+                    <div id="dropzone" class="upload-dropzone">
+                        <input type="file" id="resume-file-input" accept=".pdf,.txt" class="file-input-hidden">
+                        <div class="dropzone-content">
+                            <i class="fa-solid fa-cloud-arrow-up upload-icon"></i>
+                            <p class="upload-primary-text">Drag & drop your resume here</p>
+                            <p class="upload-secondary-text">Supports PDF, TXT (Max 5MB)</p>
+                            <button type="button" id="browse-btn" class="btn btn-secondary">Browse Files</button>
+                        </div>
+                    </div>
+                    
+                    <!-- File Progress/State Indicator -->
+                    <div id="file-info-container" class="file-info-container hidden">
+                        <div class="file-detail-row">
+                            <i class="fa-solid fa-file-lines file-icon"></i>
+                            <div class="file-progress-bar-wrapper">
+                                <div class="file-header">
+                                    <span id="uploaded-file-name" class="file-name">resume.pdf</span>
+                                    <span id="upload-percentage" class="percentage-label">100%</span>
+                                </div>
+                                <div class="progress-bar-track">
+                                    <div id="progress-bar-fill" class="progress-bar-fill"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="divider"><span>OR</span></div>
+
+                    <!-- Paste Resume Text Section -->
+                    <div class="textarea-wrapper">
+                        <textarea id="paste-resume-textarea" placeholder="Paste your resume text or cover letter details here..."></textarea>
+                        <button type="button" id="analyze-text-btn" class="btn btn-primary btn-full">Analyze Resume Text</button>
+                    </div>
+                </div>
+
+                <!-- Experience Level Configuration -->
+                <div id="experience-panel" class="glass-card panel-card">
+                    <h2 class="section-title"><i class="fa-solid fa-user-tie"></i> Seniority Level</h2>
+                    <p class="description-text">Detected experience level. You can override this to calibrate recommendations.</p>
+                    <div class="input-group">
+                        <select id="experience-level-select" class="custom-select">
+                            <option value="Junior">Junior (0 - 2 years)</option>
+                            <option value="Mid" selected>Mid-Level (2 - 5 years)</option>
+                            <option value="Senior">Senior (5+ years)</option>
+                        </select>
+                    </div>
+                    <div id="experience-extracted-label" class="extracted-badge hidden">
+                        Detected: <span id="detected-exp-years">0</span> years (<span id="detected-exp-level">Mid</span>)
+                    </div>
+                </div>
+                
+                <!-- Skill Profile Tag Cloud -->
+                <div id="skills-panel" class="glass-card panel-card flex-grow">
+                    <h2 class="section-title"><i class="fa-solid fa-brain"></i> 2. Skill Profile</h2>
+                    <p class="description-text">Your extracted skills. Add, edit, or remove tags to refine matches instantly.</p>
+                    
+                    <!-- Add Skill Form -->
+                    <div class="add-skill-form-row">
+                        <input type="text" id="add-skill-input" placeholder="e.g., PyTorch, Kubernetes" class="input-text">
+                        <button type="button" id="add-skill-button" class="btn btn-accent"><i class="fa-solid fa-plus"></i></button>
+                    </div>
+
+                    <!-- Skills Cloud Container -->
+                    <div id="skills-cloud-container" class="skills-cloud-container">
+                        <p class="empty-cloud-message">No skills loaded yet. Upload your resume or add custom skills manually.</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Panel: Recommendation Outputs -->
+            <section class="results-panel dashboard-split">
+                
+                <!-- Jobs Recommendation Column -->
+                <div class="recommendations-container">
+                    <div class="results-header-row">
+                        <h2 class="main-section-title"><i class="fa-solid fa-briefcase"></i> Job Matching Recommendations</h2>
+                        <span id="matches-count-badge" class="badge">0 Matches</span>
+                    </div>
+                    
+                    <div id="job-results-container" class="job-results-list">
+                        <!-- Default empty state -->
+                        <div class="empty-results-card glass-card">
+                            <div class="empty-icon-bubble">
+                                <i class="fa-solid fa-search"></i>
+                            </div>
+                            <h3>Awaiting Profile Analysis</h3>
+                            <p>Once you upload a resume or populate skills in your profile cloud, our recommendation engine will calculate real-time matches based on TF-IDF cosine similarity vectors.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Learning Path Roadmap Column -->
+                <div class="roadmap-container">
+                    <div class="results-header-row">
+                        <h2 class="main-section-title"><i class="fa-solid fa-graduation-cap"></i> Personalized Learning Path</h2>
+                    </div>
+
+                    <div id="learning-roadmap-container" class="learning-roadmap-content">
+                        <!-- Default empty state -->
+                        <div class="empty-roadmap-card glass-card">
+                            <div class="empty-icon-bubble">
+                                <i class="fa-solid fa-map-signs"></i>
+                            </div>
+                            <h3>Roadmap Building Tool</h3>
+                            <p>Select a job match on the left to generate a personalized learning roadmap. We'll identify your missing skills and compile targeted resources to bridge the gap.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="js/app.js"></script>
+</body>
+</html>
